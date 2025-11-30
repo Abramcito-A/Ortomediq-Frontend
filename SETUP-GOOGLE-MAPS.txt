@@ -1,0 +1,220 @@
+═══════════════════════════════════════════════════════════════
+   📍 CONFIGURACIÓN RÁPIDA DE GOOGLE MAPS - ORTOMEDIQ
+═══════════════════════════════════════════════════════════════
+
+⏱️  TIEMPO ESTIMADO: 10 minutos
+
+═══════════════════════════════════════════════════════════════
+PASO 1: OBTENER API KEY DE GOOGLE MAPS
+═══════════════════════════════════════════════════════════════
+
+1. Ir a: https://console.cloud.google.com/
+
+2. Crear nuevo proyecto:
+   - Click en selector de proyectos (arriba)
+   - "Nuevo Proyecto"
+   - Nombre: "Ortomediq"
+   - Click "Crear"
+
+3. Habilitar Maps JavaScript API:
+   - Menú (☰) → APIs & Services → Library
+   - Buscar: "Maps JavaScript API"
+   - Click en el resultado
+   - Click "HABILITAR" / "ENABLE"
+
+4. Crear API Key:
+   - Menú (☰) → APIs & Services → Credentials
+   - Click "CREATE CREDENTIALS" → "API Key"
+   - ¡COPIAR LA API KEY QUE APARECE!
+   - (Ejemplo: AIzaSyC4Xxxxxxxxxxxxxxxxxxxxxxxxx)
+
+5. Restringir API Key (IMPORTANTE para seguridad):
+   - Click en tu API Key
+   - En "Application restrictions":
+     → Seleccionar "HTTP referrers (web sites)"
+     → Click "+ ADD AN ITEM"
+     → Agregar: http://localhost:5173/*
+     → Agregar: https://tudominio.com/* (cuando lo tengas)
+   
+   - En "API restrictions":
+     → Seleccionar "Restrict key"
+     → Marcar SOLO: "Maps JavaScript API"
+   
+   - Click "SAVE"
+
+═══════════════════════════════════════════════════════════════
+PASO 2: CONFIGURAR ARCHIVO .env
+═══════════════════════════════════════════════════════════════
+
+1. En la raíz de tu proyecto, crea archivo: .env
+
+2. Agregar esta línea (reemplaza con tu API Key real):
+
+   VITE_GOOGLE_MAPS_API_KEY=AIzaSyC4Xxxxxxxxxxxxxxxxxxxxxxxxx
+
+3. Guardar archivo
+
+⚠️  IMPORTANTE: NO SUBAS ESTE ARCHIVO A GIT
+   (Ya está en .gitignore, pero verifica)
+
+═══════════════════════════════════════════════════════════════
+PASO 3: OBTENER COORDENADAS DE TU NEGOCIO
+═══════════════════════════════════════════════════════════════
+
+1. Ir a: https://www.google.com/maps
+
+2. Buscar tu negocio: "Ortomediq Torreón" o dirección exacta
+
+3. Click derecho en la ubicación EXACTA de tu negocio
+
+4. Click en las coordenadas que aparecen arriba
+   (Ejemplo: 25.5428, -103.4068)
+   → Se copian automáticamente al portapapeles
+
+═══════════════════════════════════════════════════════════════
+PASO 4: ACTUALIZAR COORDENADAS EN EL CÓDIGO
+═══════════════════════════════════════════════════════════════
+
+1. Abrir: src/components/home/ContactSection.jsx
+
+2. Buscar (línea ~14):
+   
+   const mapCenter = {
+     lat: 25.5428,    // ⬅️ REEMPLAZAR
+     lng: -103.4068   // ⬅️ REEMPLAZAR
+   }
+
+3. Pegar tus coordenadas reales
+
+═══════════════════════════════════════════════════════════════
+PASO 5: ACTUALIZAR INFORMACIÓN DE CONTACTO
+═══════════════════════════════════════════════════════════════
+
+En el mismo archivo (ContactSection.jsx), actualizar:
+
+1. DIRECCIÓN (línea ~50):
+   
+   Av. Principal #123              ← Tu calle y número
+   Col. Centro                     ← Tu colonia
+   Torreón, Coahuila, México
+   C.P. 27000                      ← Tu código postal
+
+2. TELÉFONO (línea ~65):
+   
+   (871) 576-6792                  ← Ya configurado ✓
+
+3. EMAIL (línea ~95):
+   
+   contacto@ortomediq.com          ← Tu email
+
+4. HORARIOS (línea ~105):
+   
+   Lunes a Viernes: 9:00 AM - 7:00 PM
+   Sábados: 9:00 AM - 3:00 PM
+   Domingos: Cerrado
+
+═══════════════════════════════════════════════════════════════
+PASO 6: REINICIAR SERVIDOR Y PROBAR
+═══════════════════════════════════════════════════════════════
+
+1. Detener servidor (Ctrl + C si está corriendo)
+
+2. Iniciar servidor:
+   
+   npm run dev
+
+3. Abrir navegador en: http://localhost:5173
+
+4. Ir a la sección "Visítanos o Contáctanos"
+
+5. Verificar:
+   ✓ El mapa aparece (no un placeholder gris)
+   ✓ El marcador está en la ubicación correcta
+   ✓ Puedes hacer zoom in/out
+   ✓ El botón "Ver en Google Maps" funciona
+
+═══════════════════════════════════════════════════════════════
+✅ VERIFICACIÓN FINAL
+═══════════════════════════════════════════════════════════════
+
+Deberías ver:
+
+▸ SECCIÓN DE CONTACTO:
+  ✓ Mapa interactivo de Google Maps
+  ✓ Marcador rojo en tu ubicación
+  ✓ Controles de zoom
+  ✓ Botón "Ver en Google Maps" funcionando
+
+▸ INFORMACIÓN:
+  ✓ Dirección completa y correcta
+  ✓ Teléfono con enlace para llamar
+  ✓ WhatsApp con mensaje predeterminado
+  ✓ Email con enlace mailto
+  ✓ Horarios actualizados
+
+▸ BOTÓN FLOTANTE:
+  ✓ Botón verde de WhatsApp (esquina inferior derecha)
+  ✓ Animación de pulso
+  ✓ Al hacer click, abre WhatsApp con mensaje
+
+═══════════════════════════════════════════════════════════════
+❌ SOLUCIÓN DE PROBLEMAS
+═══════════════════════════════════════════════════════════════
+
+PROBLEMA: Placeholder gris con mensaje "Configura tu API Key"
+SOLUCIÓN:
+  → Verifica que el archivo .env existe en la raíz
+  → Verifica que la variable se llama: VITE_GOOGLE_MAPS_API_KEY
+  → Reinicia el servidor: npm run dev
+
+─────────────────────────────────────────────────────────────
+
+PROBLEMA: Error "This page can't load Google Maps correctly"
+SOLUCIÓN:
+  → Verifica que la API Key es correcta
+  → Ve a Google Cloud Console
+  → Verifica que Maps JavaScript API está habilitada
+  → Verifica que no hay espacios extra en el .env
+
+─────────────────────────────────────────────────────────────
+
+PROBLEMA: El marcador está en el lugar equivocado
+SOLUCIÓN:
+  → Obtén las coordenadas correctas desde Google Maps
+  → Actualiza mapCenter en ContactSection.jsx
+  → Guarda y recarga la página
+
+─────────────────────────────────────────────────────────────
+
+PROBLEMA: La consola muestra errores de CORS
+SOLUCIÓN:
+  → Verifica las restricciones de tu API Key
+  → Asegúrate de haber agregado: http://localhost:5173/*
+
+═══════════════════════════════════════════════════════════════
+💰 COSTOS
+═══════════════════════════════════════════════════════════════
+
+✓ Google Maps ofrece $200 USD en créditos GRATIS mensuales
+✓ Para un sitio web normal, esto es MÁS QUE SUFICIENTE
+✓ Solo pagas si excedes ese límite (muy difícil)
+
+Más info: https://cloud.google.com/maps-platform/pricing
+
+═══════════════════════════════════════════════════════════════
+📚 ARCHIVOS DE REFERENCIA
+═══════════════════════════════════════════════════════════════
+
+→ GOOGLE-MAPS-CONFIG.md      - Guía detallada
+→ CONFIGURACION-RAPIDA.md    - Checklist completo
+→ .env.example               - Ejemplo de configuración
+
+═══════════════════════════════════════════════════════════════
+
+✨ ¡LISTO! Tu mapa de Google Maps está configurado.
+
+Si tienes problemas, revisa los archivos de documentación
+o verifica la consola del navegador (F12) para ver errores.
+
+═══════════════════════════════════════════════════════════════
+

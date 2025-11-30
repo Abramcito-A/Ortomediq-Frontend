@@ -1,0 +1,110 @@
+════════════════════════════════════════════════════════════════
+  🗺️  GOOGLE MAPS - GUÍA RÁPIDA DE CONFIGURACIÓN
+════════════════════════════════════════════════════════════════
+
+📋 PASO 1: OBTENER API KEY
+─────────────────────────────────────────────────────────────────
+1. Ve a: https://console.cloud.google.com/
+2. Crea un nuevo proyecto: "Ortomediq Maps"
+3. Ve a "APIs y servicios" → "Biblioteca"
+4. Busca y habilita: "Maps JavaScript API"
+5. Ve a "Credenciales" → "Crear credenciales" → "Clave de API"
+6. Copia la API Key generada
+
+⚠️  IMPORTANTE: Configura restricciones de seguridad
+   - Restricción de aplicación: "Referentes HTTP"
+   - Agregar: http://localhost:*
+   - Restricción de API: Solo "Maps JavaScript API"
+
+
+📋 PASO 2: CONFIGURAR EN TU PROYECTO
+─────────────────────────────────────────────────────────────────
+1. Crea un archivo llamado ".env" en la raíz del proyecto
+   (mismo nivel que package.json)
+
+2. Agrega esta línea (reemplaza con tu API Key real):
+
+   VITE_GOOGLE_MAPS_API_KEY=AIzaSyBxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+3. Guarda el archivo
+
+
+📋 PASO 3: OBTENER COORDENADAS DE TU NEGOCIO
+─────────────────────────────────────────────────────────────────
+1. Ve a: https://www.google.com/maps
+2. Busca tu dirección exacta
+3. Click derecho en el marcador
+4. Click en las coordenadas para copiarlas
+5. Ejemplo: 25.5428, -103.4068
+
+
+📋 PASO 4: ACTUALIZAR COORDENADAS EN EL CÓDIGO
+─────────────────────────────────────────────────────────────────
+Abre: src/components/home/ContactSection.jsx
+
+Busca estas líneas (aproximadamente línea 7-10):
+
+  const mapCenter = {
+    lat: 25.5428,   // ← Reemplaza con tu latitud
+    lng: -103.4068  // ← Reemplaza con tu longitud
+  }
+
+También actualiza la dirección física (línea ~35):
+
+  <p className="text-gray-600">
+    Av. Principal #123<br />  {/* ← Tu dirección real */}
+    Torreón, Coahuila, México
+  </p>
+
+
+📋 PASO 5: REINICIAR SERVIDOR
+─────────────────────────────────────────────────────────────────
+En la terminal, presiona: Ctrl + C (para detener)
+Luego ejecuta: npm run dev
+
+⚠️  Es NECESARIO reiniciar después de crear/modificar .env
+
+
+📋 PASO 6: VERIFICAR
+─────────────────────────────────────────────────────────────────
+1. Ve a: http://localhost:5174 (o tu puerto)
+2. Scroll hasta la sección "Visítanos o Contáctanos"
+3. Deberías ver el mapa de Google Maps interactivo
+
+✅ Si ves el mapa → ¡Todo funciona!
+❌ Si ves un placeholder gris → Falta configurar API Key
+❌ Si ves error rojo → API Key inválida o mal configurada
+
+
+════════════════════════════════════════════════════════════════
+  📚 DOCUMENTACIÓN COMPLETA
+════════════════════════════════════════════════════════════════
+
+Para más detalles, troubleshooting y personalización:
+→ Lee: GOOGLE-MAPS-SETUP.md
+
+
+════════════════════════════════════════════════════════════════
+  💡 NOTAS IMPORTANTES
+════════════════════════════════════════════════════════════════
+
+✓ La librería ya está instalada (@react-google-maps/api)
+✓ El componente ya está implementado
+✓ Solo necesitas configurar la API Key
+
+✓ Google Maps es GRATIS hasta $200 USD/mes
+  (equivale a ~28,000 cargas de mapa al mes)
+  
+✓ NUNCA subas tu .env a GitHub
+  (Ya está en .gitignore)
+
+✓ Configura restricciones de seguridad en Google Cloud
+  para evitar uso no autorizado de tu API Key
+
+
+════════════════════════════════════════════════════════════════
+  🎉 ¡Eso es todo!
+════════════════════════════════════════════════════════════════
+
+
+
