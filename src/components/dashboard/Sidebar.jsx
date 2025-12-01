@@ -28,6 +28,7 @@ const Sidebar = ({ userRole = 'admin', onCollapse }) => {
     admin: [
       { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
       { name: 'Punto de Venta', path: '/dashboard/punto-venta', icon: CreditCard },
+      { name: 'Pedidos', path: '/dashboard/pedidos', icon: ShoppingCart },
       { name: 'Ventas', path: '/dashboard/ventas', icon: ShoppingCart },
       { name: 'Productos', path: '/dashboard/productos', icon: Package },
       { name: 'Inventario', path: '/dashboard/inventario', icon: ClipboardList },
@@ -39,6 +40,7 @@ const Sidebar = ({ userRole = 'admin', onCollapse }) => {
     empleado: [
       { name: 'Mi Dashboard', path: '/dashboard', icon: LayoutDashboard },
       { name: 'Punto de Venta', path: '/dashboard/punto-venta', icon: CreditCard },
+      { name: 'Pedidos', path: '/dashboard/pedidos', icon: ShoppingCart },
       { name: 'Ventas', path: '/dashboard/ventas', icon: ShoppingCart },
       { name: 'Productos', path: '/dashboard/productos', icon: Package },
       { name: 'Clientes', path: '/dashboard/clientes', icon: Users },

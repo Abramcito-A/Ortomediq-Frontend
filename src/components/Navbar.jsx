@@ -58,7 +58,7 @@ function Navbar() {
               href="/productos" 
               className="text-gray-700 hover:text-blue-600 font-medium transition duration-300"
             >
-              Productos
+              Catalogo
             </a>
             <button 
               onClick={() => scrollToSection('contacto')}

@@ -14,7 +14,7 @@ const DashboardLayout = () => {
   // Por ahora usamos datos de ejemplo
   const user = {
     name: 'Admin User',
-    role: localStorage.getItem('userRole') || 'admin', // admin, empleado, cliente
+    role: localStorage.getItem('userRole') || 'empleado', // admin, empleado, cliente
     email: 'admin@ortomediq.com'
   }
 
@@ -22,9 +22,11 @@ const DashboardLayout = () => {
   const pageTitles = {
     '/dashboard': 'Dashboard',
     '/dashboard/punto-venta': 'Punto de Venta',
+    '/dashboard/ventas': 'Ventas',
     '/dashboard/empleados': 'Empleados',
     '/dashboard/productos': 'Productos',
     '/dashboard/reportes': 'Reportes',
+    '/dashboard/pedidos': 'Pedidos',
     '/dashboard/perfil': 'Mi Perfil',
     '/dashboard/configuracion': 'Configuración'
   }

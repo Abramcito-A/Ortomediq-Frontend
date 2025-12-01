@@ -18,6 +18,8 @@ import Empleados from '../pages/dashboard/Empleados'
 import PuntoVenta from '../pages/dashboard/PuntoVenta'
 import ProductosDashboard from '../pages/dashboard/Productos'
 import Reportes from '../pages/dashboard/Reportes'
+import Pedidos from '../pages/dashboard/Pedidos'
+import Ventas from '../pages/dashboard/Ventas'
 
 // Componente temporal para Home
 const TempHome = () => (
@@ -56,7 +58,7 @@ const TempHome = () => (
 const AppRouter = () => {
   // TODO: Obtener el rol del usuario del AuthContext
   // Por ahora usamos localStorage o 'cliente' como valor por defecto
-  const userRole = localStorage.getItem('userRole') || 'admin' // 'admin', 'empleado', 'cliente'
+  const userRole = localStorage.getItem('userRole') || 'empleado' // 'admin', 'empleado', 'cliente'
 
   // Determinar qué dashboard mostrar según el rol
   const getDashboardComponent = () => {
@@ -96,7 +98,7 @@ const AppRouter = () => {
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={getDashboardComponent()} />
           <Route path="punto-venta" element={<PuntoVenta />} />
-          <Route path="ventas" element={<div className="p-6">Módulo de Ventas (En construcción)</div>} />
+          <Route path="ventas" element={<Ventas />} />
           <Route path="productos" element={<ProductosDashboard />} />
           <Route path="inventario" element={<div className="p-6">Módulo de Inventario (En construcción)</div>} />
           <Route path="empleados" element={<Empleados />} />
@@ -104,7 +106,7 @@ const AppRouter = () => {
           <Route path="reportes" element={<Reportes />} />
           <Route path="configuracion" element={<div className="p-6">Configuración (En construcción)</div>} />
           <Route path="perfil" element={<div className="p-6">Mi Perfil (En construcción)</div>} />
-          <Route path="pedidos" element={<div className="p-6">Mis Pedidos (En construcción)</div>} />
+          <Route path="pedidos" element={<Pedidos />} />
           <Route path="favoritos" element={<div className="p-6">Mis Favoritos (En construcción)</div>} />
         </Route>
         

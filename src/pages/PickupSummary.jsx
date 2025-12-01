@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { FiArrowLeft, FiCreditCard, FiUser, FiPhone, FiMail } from 'react-icons/fi'
+import { FiArrowLeft, FiUser, FiPhone, FiMail, FiCopy, FiCheck } from 'react-icons/fi'
 import { motion } from 'framer-motion'
 import { useCart } from '../hooks/useCart'
 import { toast } from 'react-toastify'
 import NavbarCatalogo from '../components/NavbarCatalogo'
+import { generatePickupCode, getPickupDate } from '../utils/generatePickupCode'
 
 const PickupSummary = () => {
   const navigate = useNavigate()
@@ -18,7 +19,11 @@ const PickupSummary = () => {
     telefono: ''
   })
 
-  const [metodoPago, setMetodoPago] = useState('efectivo')
+  // Estado del modal de confirmación
+  const [showModal, setShowModal] = useState(false)
+  const [pickupCode, setPickupCode] = useState('')
+  const [pickupDate, setPickupDate] = useState('')
+  const [copiedCode, setCopiedCode] = useState(false)
 
   // Si el carrito está vacío, redirigir
   if (cartItems.length === 0) {
@@ -53,13 +58,45 @@ const PickupSummary = () => {
       return
     }
 
-    // Guardar datos y redirigir a checkout
-    localStorage.setItem('pickupCustomerInfo', JSON.stringify({
-      ...formData,
-      metodoPago
-    }))
+    // Generar código de recogida
+    const codigo = generatePickupCode()
+    const fecha = getPickupDate()
 
-    navigate('/checkout-pickup')
+    // Guardar datos en localStorage
+    const order = {
+      id: Date.now(),
+      pickupCode: codigo,
+      pickupDate: fecha,
+      customerInfo: formData,
+      items: cartItems,
+      subtotal: getSubtotal(),
+      descuento: getTotalDiscount(),
+      total: getTotal(0),
+      status: 'confirmado',
+      createdAt: new Date().toISOString()
+    }
+
+    // Guardar en localStorage
+    const existingOrders = JSON.parse(localStorage.getItem('userOrders')) || []
+    localStorage.setItem('userOrders', JSON.stringify([...existingOrders, order]))
+
+    // Mostrar modal con el código
+    setPickupCode(codigo)
+    setPickupDate(fecha)
+    setShowModal(true)
+    toast.success('¡Pedido confirmado exitosamente!')
+  }
+
+  const handleCopyCode = () => {
+    navigator.clipboard.writeText(pickupCode)
+    setCopiedCode(true)
+    setTimeout(() => setCopiedCode(false), 2000)
+  }
+
+  const handleCloseModal = () => {
+    clearCart()
+    setShowModal(false)
+    navigate('/')
   }
 
   const subtotal = getSubtotal()
@@ -176,80 +213,6 @@ const PickupSummary = () => {
               </div>
             </motion.div>
 
-            {/* Método de pago */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="bg-white rounded-xl shadow-sm p-6"
-            >
-              <div className="flex items-center gap-2 mb-4">
-                <FiCreditCard className="text-blue-600" size={24} />
-                <h2 className="text-xl font-bold text-gray-900">
-                  Método de pago
-                </h2>
-              </div>
-
-              <div className="space-y-3">
-                <label className={`flex items-center gap-3 p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                  metodoPago === 'efectivo' ? 'border-blue-600 bg-blue-50' : 'border-gray-200 hover:border-gray-300'
-                }`}>
-                  <input
-                    type="radio"
-                    name="metodoPago"
-                    value="efectivo"
-                    checked={metodoPago === 'efectivo'}
-                    onChange={(e) => setMetodoPago(e.target.value)}
-                    className="w-4 h-4 text-blue-600"
-                  />
-                  <div>
-                    <p className="font-medium text-gray-900">Efectivo</p>
-                    <p className="text-sm text-gray-500">Paga al momento de recoger</p>
-                  </div>
-                </label>
-
-                <label className={`flex items-center gap-3 p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                  metodoPago === 'tarjeta' ? 'border-blue-600 bg-blue-50' : 'border-gray-200 hover:border-gray-300'
-                }`}>
-                  <input
-                    type="radio"
-                    name="metodoPago"
-                    value="tarjeta"
-                    checked={metodoPago === 'tarjeta'}
-                    onChange={(e) => setMetodoPago(e.target.value)}
-                    className="w-4 h-4 text-blue-600"
-                  />
-                  <div>
-                    <p className="font-medium text-gray-900">Tarjeta de crédito/débito</p>
-                    <p className="text-sm text-gray-500">Pago en terminal al recoger</p>
-                  </div>
-                </label>
-
-                <label className={`flex items-center gap-3 p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                  metodoPago === 'transferencia' ? 'border-blue-600 bg-blue-50' : 'border-gray-200 hover:border-gray-300'
-                }`}>
-                  <input
-                    type="radio"
-                    name="metodoPago"
-                    value="transferencia"
-                    checked={metodoPago === 'transferencia'}
-                    onChange={(e) => setMetodoPago(e.target.value)}
-                    className="w-4 h-4 text-blue-600"
-                  />
-                  <div>
-                    <p className="font-medium text-gray-900">Transferencia bancaria</p>
-                    <p className="text-sm text-gray-500">Recibe los datos al confirmar</p>
-                  </div>
-                </label>
-              </div>
-
-              <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                <p className="text-sm text-blue-900">
-                  <strong>ℹ️ Información:</strong> Al confirmar tu pedido, recibirás un código de recogida por email. Usa este código para identificar tu pedido.
-                </p>
-              </div>
-            </motion.div>
-
             {/* Instrucciones de recogida */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -337,6 +300,109 @@ const PickupSummary = () => {
             </motion.div>
           </div>
         </form>
+
+        {/* Modal de confirmación con código */}
+        {showModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+            onClick={(e) => {
+              // Evitar cerrar si se hace clic en el modal (no en el fondo)
+              if (e.target === e.currentTarget) {
+                // No hacer nada - el usuario no puede cerrar con ESC o fondo
+              }
+            }}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden"
+            >
+              {/* Header del modal */}
+              <div className="bg-gradient-to-r from-green-500 to-green-600 px-6 py-8 text-white text-center">
+                <div className="text-5xl mb-3">✓</div>
+                <h2 className="text-2xl font-bold">¡Pedido Confirmado!</h2>
+                <p className="text-green-100 mt-2">Tu compra se ha registrado exitosamente</p>
+              </div>
+
+              {/* Contenido del modal */}
+              <div className="p-6 space-y-6">
+                {/* Código de recogida */}
+                <div className="text-center">
+                  <p className="text-sm text-gray-500 mb-2">Tu código de recogida</p>
+                  <div className="bg-gray-50 rounded-lg p-4 border-2 border-dashed border-blue-300">
+                    <code className="text-3xl font-bold text-blue-600 tracking-widest">
+                      {pickupCode}
+                    </code>
+                  </div>
+                  <button
+                    onClick={handleCopyCode}
+                    className={`mt-3 flex items-center justify-center gap-2 w-full py-2 px-4 rounded-lg font-medium transition-colors ${
+                      copiedCode
+                        ? 'bg-green-100 text-green-700'
+                        : 'bg-blue-100 text-blue-600 hover:bg-blue-200'
+                    }`}
+                  >
+                    {copiedCode ? (
+                      <>
+                        <FiCheck size={18} />
+                        Copiado
+                      </>
+                    ) : (
+                      <>
+                        <FiCopy size={18} />
+                        Copiar código
+                      </>
+                    )}
+                  </button>
+                </div>
+
+                {/* Información de recogida */}
+                <div className="border-t border-gray-200 pt-6">
+                  <h3 className="font-semibold text-gray-900 mb-3">📍 Instrucciones de recogida</h3>
+                  <div className="space-y-3 text-sm text-gray-700">
+                    <div className="flex gap-3">
+                      <span className="text-blue-600 font-bold">1.</span>
+                      <p><strong>Fecha de recogida:</strong> {pickupDate}</p>
+                    </div>
+                    <div className="flex gap-3">
+                      <span className="text-blue-600 font-bold">2.</span>
+                      <p>Presenta este código o tu teléfono en tienda</p>
+                    </div>
+                    <div className="flex gap-3">
+                      <span className="text-blue-600 font-bold">3.</span>
+                      <p>Verifica que todos tus productos sean correctos</p>
+                    </div>
+                    <div className="flex gap-3">
+                      <span className="text-blue-600 font-bold">4.</span>
+                      <p>Realiza el pago en tienda</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Información de contacto confirmada */}
+                <div className="bg-gray-50 rounded-lg p-4 text-sm space-y-2">
+                  <p><strong>📧 Email:</strong> {formData.email}</p>
+                  <p><strong>📱 Teléfono:</strong> {formData.telefono}</p>
+                  <p className="text-gray-500 text-xs mt-3">
+                    Te enviaremos confirmación y recordatorio de recogida a estos contactos
+                  </p>
+                </div>
+
+                {/* Botones de acción */}
+                <button
+                  onClick={handleCloseModal}
+                  className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                >
+                  Ir a inicio
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
       </div>
     </div>
   )
